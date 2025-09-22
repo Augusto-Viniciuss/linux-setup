@@ -9,7 +9,7 @@
 	url = https://github.com/junegunn/vim-plug.git
 [submodule "submodules/athame"]
 	path = submodules/athame
-	url = http://github.com/ardagnir/athame
+	url = https://github.com/ardagnir/athame.git
 [submodule "submodules/i3"]
 	path = submodules/i3
 	url = https://github.com/Airblader/i3
@@ -72,7 +72,7 @@
 	url = https://github.com/Augusto-Viniciuss/papis
 [submodule "submodules/papis-zotero"]
 	path = submodules/papis-zotero
-	url = http://github.com/papis/papis-zotero
+	url = https://github.com/papis/papis-zotero.git
 [submodule "submodules/fzf"]
 	path = submodules/fzf
 	url = https://github.com/junegunn/fzf.git
