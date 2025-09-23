@@ -130,9 +130,9 @@ bash $APPCONFIG_PATH/silver_searcher/install.sh $subinstall_params
 bash $APPCONFIG_PATH/fzf/install.sh $subinstall_params
 
 # install PLAYERCTL
-if [ "$arch" != "aarch64" ]; then
-  ! $docker && bash $APPCONFIG_PATH/playerctl/install.sh $subinstall_params
-fi
+#if [ "$arch" != "aarch64" ]; then
+#  ! $docker && bash $APPCONFIG_PATH/playerctl/install.sh $subinstall_params
+#fi
 
 # install PAPIS
 ! $docker && bash $APPCONFIG_PATH/papis/install.sh $subinstall_params
