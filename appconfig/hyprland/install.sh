@@ -93,7 +93,7 @@ apt_packages=(
   vim-gtk3 git tig cmake cmake-curses-gui build-essential autoconf automake
   autogen pkg-config libtool libncurses-dev libc++-dev clangd clang-format
   python3 python3-dev python3-pip python3-setuptools python3-venv python3-git
-  python3-isort python3-autopep8 python3-black python3-flake8
+  python3-isort python3-autopep8 black python3-flake8
   zsh zsh-syntax-highlighting fzf silversearcher-ag ruby universal-ctags
   openssh-client openssh-server nmap net-tools autossh gparted jq tree ncdu
   iputils-ping
