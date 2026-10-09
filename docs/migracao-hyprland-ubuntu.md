@@ -1,19 +1,19 @@
 # Migracao de i3/urxvt para Hyprland/Kitty
 
-Este perfil prepara uma sessao de teste em Ubuntu 22.04 ou 24.04, mantendo Vim e seus plugins, Python, Zsh, tmux, Ranger, SSH, PDFPC e as ferramentas auxiliares escolhidas. A sessao nova usa Hyprland 0.55.4 e Kitty. O instalador principal `./install.sh` continua sendo o legado i3/urxvt; para este teste use somente `appconfig/hyprland/install.sh`.
+Este perfil prepara uma sessao de teste em Ubuntu 22.04 ou 24.04, mantendo Vim e seus plugins, Python, Zsh, tmux, Ranger, SSH, PDFPC e as ferramentas auxiliares escolhidas. A sessao nova usa Hyprland 0.55.4 e Kitty. O comando `./install.sh` na raiz instala este perfil; `./install.sh --legacy` seleciona explicitamente o instalador antigo de i3/urxvt.
 
 ## Instalacao no computador de teste
 
-Nao executei o instalador neste computador. Ele foi preparado para ser executado por um usuario normal, em uma maquina de teste, e pede `sudo` quando altera pacotes ou instala a sessao de login. Antes, instale o Nix, deixe o daemon ativo e habilite `nix-command` e `flakes` seguindo [a documentacao oficial do Hyprland para outras distribuicoes](https://wiki.hypr.land/Nix/Hyprland-on-other-distros/). O perfil nao instala nem configura o Nix.
+Nao executei o instalador neste computador. Ele foi preparado para ser executado por um usuario normal, em uma maquina de teste, e pede `sudo` quando altera pacotes ou instala a sessao de login. Se Nix nao estiver presente, o script baixa o instalador oficial por HTTPS e instala Nix em modo multiusuario, incluindo o servico daemon; essa modalidade requer systemd e torna a remocao do Nix mais trabalhosa. O script tambem prepara `curl` e certificados CA para esse bootstrap. Os comandos Nix habilitam `nix-command` e `flakes` somente na chamada, sem alterar a configuracao global do Nix. Veja a [documentacao oficial de instalacao do Nix](https://nixos.org/download/) e a [orientacao do Hyprland para outras distribuicoes](https://wiki.hypr.land/nix/hyprland-on-any-distro-using-nix/).
 
 Com o repositorio clonado no computador de teste:
 
 ```bash
 cd linux-setup
-bash appconfig/hyprland/install.sh
+./install.sh
 ```
 
-O script aceita Ubuntu 22.04 e 24.04 AMD64, prepara a sessao **Hyprland (linux-setup)** e cria backups datados das configuracoes que substitui. Ao terminar, saia da sessao atual e escolha essa sessao na tela de login. O perfil seleciona Zsh como shell de login; o Bash continua configurado para uso interativo e para scripts.
+O script aceita Ubuntu 22.04 e 24.04 AMD64, prepara a sessao **Hyprland (linux-setup)** e cria backups datados das configuracoes que substitui. Ao terminar, saia da sessao atual e escolha essa sessao na tela de login. O perfil seleciona Zsh como shell de login; o Bash continua configurado para uso interativo e para scripts. O instalador acrescenta o perfil e nao remove os programas que uma execucao antiga ja tenha instalado; para testar a lista enxuta sem residuos, use uma instalacao limpa do Ubuntu.
 
 ## Aplicativos e componentes
 
@@ -36,7 +36,8 @@ Como combinado, estas sao as adicoes explicitas do perfil, alem da substituicao 
 
 | Adicao | Pacotes/componentes | Motivo |
 | --- | --- | --- |
-| Gerenciador de janelas e terminal | Hyprland 0.55.4, NixGL e Cachix via Nix; Kitty via APT | Mesma versao do compositor nos dois Ubuntus e terminal acelerado por GPU |
+| Gerenciador de janelas e terminal | Nix multiusuario (bootstrap automatico quando ausente), Hyprland 0.55.4, NixGL e Cachix via Nix; Kitty via APT | Mesma versao do compositor nos dois Ubuntus e terminal acelerado por GPU |
+| Bootstrap do Nix | curl e certificados CA via APT quando Nix estiver ausente; instalador oficial do Nix via HTTPS | Permite executar o perfil completo em uma instalacao limpa; configura o servico `nix-daemon` multiusuario |
 | Barra e captura Wayland | Waybar, Rofi, swaylock, grim, slurp, wl-clipboard, brightnessctl, XWayland e nm-applet | Substituem i3bar, Shutter, a area de transferencia X11 e os controles de rede/tela |
 | OBS no Wayland | OBS Studio via Flatpak; Flatpak, PipeWire, WirePlumber, portais XDG GTK/WLR e GStreamer | Captura de tela e janela pelo protocolo PipeWire no Wayland. O OBS documenta essa fonte como dependente de Wayland ([documentacao de captura do OBS](https://obsproject.com/kb/display-capture-sources)). |
 | C++ e ROS 2 no editor | clangd e clang-format pelo APT; Node.js 22 e tmux 3.3+ pelo Nix | O plugin CoC existente no Vim inicia o servidor clangd usando Node.js; tmux moderno permite previews Kitty |
@@ -44,7 +45,7 @@ Como combinado, estas sao as adicoes explicitas do perfil, alem da substituicao 
 | Previews do Ranger | Pillow, PyGObject, file, highlight, w3m, caca-utils, ExifTool, poppler-utils, atool/libarchive, 7zip, unzip, unrar-free, mediainfo, transmission-cli e odt2txt | Mantem previews de imagens, codigo, PDF, arquivos compactados, torrents, documentos e metadados de midia |
 | Tema e prompt Zsh | Oh My Zsh clonado pelo perfil e zsh-syntax-highlighting via APT | Permite usar o tema agnoster ja configurado e realce de comandos |
 
-O Nix e pre-requisito e nao e instalado automaticamente. O NixGL disponibiliza wrappers Mesa, NVIDIA e NVIDIA hibrida; nenhum driver NVIDIA e instalado por este perfil. O script tambem adiciona o PPA do GRUB Customizer para mante-lo disponivel nas duas versoes do Ubuntu.
+O NixGL disponibiliza wrappers Mesa, NVIDIA e NVIDIA hibrida; nenhum driver NVIDIA e instalado por este perfil. O script tambem adiciona o PPA do GRUB Customizer para mante-lo disponivel nas duas versoes do Ubuntu.
 
 ## Atalhos
 

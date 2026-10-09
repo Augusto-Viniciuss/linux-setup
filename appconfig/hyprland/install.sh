@@ -12,13 +12,6 @@ if ! command -v apt-get >/dev/null 2>&1 || ! command -v sudo >/dev/null 2>&1; th
   printf 'Este instalador requer Ubuntu e sudo.\n' >&2
   exit 1
 fi
-if ! command -v nix >/dev/null 2>&1; then
-  printf 'Nix nao encontrado. Instale-o e habilite nix-command e flakes antes de continuar.\n' >&2
-  printf 'Este perfil nao instala Nix nem altera a configuracao global do Nix.\n' >&2
-  printf 'Instrucoes: https://nixos.org/download/\n' >&2
-  exit 1
-fi
-
 # shellcheck disable=SC1091
 ubuntu_version="$(. /etc/os-release && printf '%s' "$VERSION_ID")"
 case "$ubuntu_version" in
@@ -47,7 +40,40 @@ for submodule in "${selected_submodules[@]}"; do
   fi
 done
 
-export PATH="$HOME/.local/bin:$HOME/.nix-profile/bin:$PATH"
+# Bootstrap Nix only after all non-mutating platform and repository checks pass.
+# The official multi-user installer is recommended for systemd-based Linux.
+export PATH="$HOME/.local/bin:$HOME/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PATH"
+nix_profile="/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
+if [ -f "$nix_profile" ]; then
+  # shellcheck disable=SC1090
+  . "$nix_profile"
+fi
+
+if ! command -v nix >/dev/null 2>&1; then
+  if ! command -v systemctl >/dev/null 2>&1; then
+    printf 'Nix nao esta instalado e este sistema nao oferece systemd para o daemon multiusuario.\n' >&2
+    exit 1
+  fi
+  printf 'Nix nao encontrado; vou instala-lo em modo multiusuario usando o instalador oficial.\n'
+  sudo apt-get update
+  sudo apt-get install -y curl ca-certificates
+  nix_installer="$(mktemp)"
+  trap 'rm -f "$nix_installer"' EXIT
+  curl --proto '=https' --tlsv1.2 -fsSL https://nixos.org/nix/install -o "$nix_installer"
+  sh "$nix_installer" --daemon
+  rm -f "$nix_installer"
+  trap - EXIT
+  export PATH="$HOME/.local/bin:$HOME/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PATH"
+  if [ -f "$nix_profile" ]; then
+    # shellcheck disable=SC1090
+    . "$nix_profile"
+  fi
+fi
+
+if ! command -v nix >/dev/null 2>&1; then
+  printf 'A instalacao do Nix terminou, mas o comando nix nao ficou disponivel nesta sessao.\n' >&2
+  exit 1
+fi
 
 # Keep the previously selected editor and development tools, plus only the
 # runtime dependencies for the Wayland session and Ranger's existing previews.
