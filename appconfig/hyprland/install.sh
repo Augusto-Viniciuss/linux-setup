@@ -116,7 +116,7 @@ fi
 
 # Use one tagged Hyprland/NixGL stack and Node.js version on both Ubuntu LTSes.
 nix --extra-experimental-features 'nix-command flakes' profile add nixpkgs#cachix
-sudo "$HOME/.nix-profile/bin/cachix" use hyprland
+sudo env "PATH=$PATH" "$HOME/.nix-profile/bin/cachix" use hyprland
 if systemctl is-active --quiet nix-daemon.service; then
   sudo systemctl restart nix-daemon.service
 fi
