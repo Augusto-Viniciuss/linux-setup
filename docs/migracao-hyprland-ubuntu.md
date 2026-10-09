@@ -45,7 +45,7 @@ Como combinado, estas sao as adicoes explicitas do perfil, alem da substituicao 
 | Previews do Ranger | Pillow, PyGObject, file, highlight, w3m, caca-utils, ExifTool, poppler-utils, atool/libarchive, 7zip, unzip, unrar-free, mediainfo, transmission-cli e odt2txt | Mantem previews de imagens, codigo, PDF, arquivos compactados, torrents, documentos e metadados de midia |
 | Tema e prompt Zsh | Oh My Zsh clonado pelo perfil e zsh-syntax-highlighting via APT | Permite usar o tema agnoster ja configurado e realce de comandos |
 
-O NixGL disponibiliza wrappers Mesa, NVIDIA e NVIDIA hibrida; nenhum driver NVIDIA e instalado por este perfil. O script tambem adiciona o PPA do GRUB Customizer para mante-lo disponivel nas duas versoes do Ubuntu.
+O cache Cachix do Hyprland e configurado globalmente com `sudo`, antes de instalar o compositor, e o daemon Nix e reiniciado, se estiver ativo, para carregar a configuracao. O script nao adiciona seu usuario a `trusted-users`, pois isso concede poderes equivalentes a root no Nix. O NixGL disponibiliza wrappers Mesa, NVIDIA e NVIDIA hibrida; nenhum driver NVIDIA e instalado por este perfil. O script tambem adiciona o PPA do GRUB Customizer para mante-lo disponivel nas duas versoes do Ubuntu.
 
 ## Atalhos
 

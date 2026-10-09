@@ -115,14 +115,17 @@ if [ -f "$repo_root/submodules/vimiv/Makefile" ]; then
 fi
 
 # Use one tagged Hyprland/NixGL stack and Node.js version on both Ubuntu LTSes.
-nix --extra-experimental-features 'nix-command flakes' profile install nixpkgs#cachix
-"$HOME/.nix-profile/bin/cachix" use hyprland
-nix --extra-experimental-features 'nix-command flakes' profile install --impure github:nix-community/nixGL#nixGLIntel
-nix --extra-experimental-features 'nix-command flakes' profile install --impure github:nix-community/nixGL#nixGLNvidia
-nix --extra-experimental-features 'nix-command flakes' profile install --impure github:nix-community/nixGL#nixGLNvidiaBumblebee
-nix --extra-experimental-features 'nix-command flakes' profile install github:hyprwm/Hyprland/v0.55.4
-nix --extra-experimental-features 'nix-command flakes' profile install nixpkgs#tmux
-nix --extra-experimental-features 'nix-command flakes' profile install nixpkgs#nodejs_22
+nix --extra-experimental-features 'nix-command flakes' profile add nixpkgs#cachix
+sudo "$HOME/.nix-profile/bin/cachix" use hyprland
+if systemctl is-active --quiet nix-daemon.service; then
+  sudo systemctl restart nix-daemon.service
+fi
+nix --extra-experimental-features 'nix-command flakes' profile add --impure github:nix-community/nixGL#nixGLIntel
+nix --extra-experimental-features 'nix-command flakes' profile add --impure github:nix-community/nixGL#nixGLNvidia
+nix --extra-experimental-features 'nix-command flakes' profile add --impure github:nix-community/nixGL#nixGLNvidiaBumblebee
+nix --extra-experimental-features 'nix-command flakes' profile add github:hyprwm/Hyprland/v0.55.4
+nix --extra-experimental-features 'nix-command flakes' profile add nixpkgs#tmux
+nix --extra-experimental-features 'nix-command flakes' profile add nixpkgs#nodejs_22
 
 tmux_conf="$HOME/.tmux.conf"
 tmux_version="$("$HOME/.nix-profile/bin/tmux" -V | awk '{print $2}')"
