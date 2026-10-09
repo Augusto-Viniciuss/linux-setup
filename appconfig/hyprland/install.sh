@@ -35,6 +35,18 @@ if [ ! -d "$repo_root/.git" ] && [ ! -f "$repo_root/.git" ]; then
   exit 1
 fi
 
+selected_submodules=(submodules/vim-plug submodules/tmuxinator submodules/vimiv)
+for submodule in "${selected_submodules[@]}"; do
+  submodule_path="$repo_root/$submodule"
+  if [ -e "$submodule_path/.git" ] || [ -d "$submodule_path/.git" ]; then
+    if [ -n "$(git -C "$submodule_path" status --porcelain)" ]; then
+      printf 'Submodulo com alteracoes locais: %s\n' "$submodule" >&2
+      printf 'Salve essas alteracoes antes de instalar; nenhum pacote foi alterado.\n' >&2
+      exit 1
+    fi
+  fi
+done
+
 export PATH="$HOME/.local/bin:$HOME/.nix-profile/bin:$PATH"
 
 # Keep the previously selected editor and development tools, plus only the
@@ -69,8 +81,7 @@ sudo apt-get install -y "${apt_packages[@]}"
 
 # Download only source submodules used by this profile; the legacy full
 # installer initializes many unrelated components, including removed apps.
-git -C "$repo_root" submodule update --init --depth 1 -- \
-  submodules/vim-plug submodules/tmuxinator submodules/vimiv
+git -C "$repo_root" submodule update --init --depth 1 -- "${selected_submodules[@]}"
 
 # Keep the existing image viewer without relying on an obsolete Ubuntu package.
 if [ -f "$repo_root/submodules/vimiv/Makefile" ]; then
@@ -203,7 +214,12 @@ rm -f "$zshrc_tmp"
 bashrc="$HOME/.bashrc"
 bashrc_tmp="$(mktemp)"
 if [ -f "$bashrc" ]; then
-  cat "$bashrc" > "$bashrc_tmp"
+  awk '
+    index($0, "/appconfig/bash/dotbashrc") > 0 &&
+    index($0, "/appconfig/bash/dotbashrc_git") == 0 &&
+    $0 ~ /^[[:space:]]*(source|\.)[[:space:]]/ { next }
+    { print }
+  ' "$bashrc" > "$bashrc_tmp"
 fi
 if ! grep -Fq '# >>> linux-setup Hyprland profile >>>' "$bashrc_tmp"; then
   {
