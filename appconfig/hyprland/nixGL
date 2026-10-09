@@ -10,7 +10,19 @@ fi
 nix_profile="$HOME/.nix-profile/bin"
 case "$gpu_mode" in
   intel|mesa|amd) exec "$nix_profile/nixGLIntel" "$@" ;;
-  nvidia) exec "$nix_profile/nixGLNvidia" "$@" ;;
-  nvidia-hybrid) exec "$nix_profile/nixGLNvidiaBumblebee" "$@" ;;
+  nvidia)
+    if [ ! -x "$nix_profile/nixGLNvidia" ]; then
+      printf 'Wrapper NVIDIA indisponivel. Instale o driver proprietario e execute novamente o instalador.\n' >&2
+      exit 1
+    fi
+    exec "$nix_profile/nixGLNvidia" "$@"
+    ;;
+  nvidia-hybrid)
+    if [ ! -x "$nix_profile/nixGLNvidiaBumblebee" ]; then
+      printf 'Wrapper NVIDIA hibrido indisponivel. Instale o driver proprietario e execute novamente o instalador.\n' >&2
+      exit 1
+    fi
+    exec "$nix_profile/nixGLNvidiaBumblebee" "$@"
+    ;;
   *) printf 'Unknown Hyprland GPU setting: %s\n' "$gpu_mode" >&2; exit 2 ;;
 esac

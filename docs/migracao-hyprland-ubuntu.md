@@ -36,7 +36,7 @@ Como combinado, estas sao as adicoes explicitas do perfil, alem da substituicao 
 
 | Adicao | Pacotes/componentes | Motivo |
 | --- | --- | --- |
-| Gerenciador de janelas e terminal | Nix multiusuario (bootstrap automatico quando ausente), Hyprland 0.55.4, NixGL e Cachix via Nix; Kitty via APT | Mesma versao do compositor nos dois Ubuntus e terminal acelerado por GPU |
+| Gerenciador de janelas e terminal | Nix multiusuario (bootstrap automatico quando ausente), Hyprland 0.55.4, NixGL Mesa e Cachix via Nix; Kitty via APT | Mesma versao do compositor nos dois Ubuntus e terminal acelerado por GPU |
 | Bootstrap do Nix | curl e certificados CA via APT quando Nix estiver ausente; instalador oficial do Nix via HTTPS | Permite executar o perfil completo em uma instalacao limpa; configura o servico `nix-daemon` multiusuario |
 | Barra e captura Wayland | Waybar, Rofi, swaylock, grim, slurp, wl-clipboard, brightnessctl, XWayland e nm-applet | Substituem i3bar, Shutter, a area de transferencia X11 e os controles de rede/tela |
 | OBS no Wayland | OBS Studio via Flatpak; Flatpak, PipeWire, WirePlumber, portais XDG GTK/WLR e GStreamer | Captura de tela e janela pelo protocolo PipeWire no Wayland. O OBS documenta essa fonte como dependente de Wayland ([documentacao de captura do OBS](https://obsproject.com/kb/display-capture-sources)). |
@@ -45,7 +45,7 @@ Como combinado, estas sao as adicoes explicitas do perfil, alem da substituicao 
 | Previews do Ranger | Pillow, PyGObject, file, highlight, w3m, caca-utils, ExifTool, poppler-utils, atool/libarchive, 7zip, unzip, unrar-free, mediainfo, transmission-cli e odt2txt | Mantem previews de imagens, codigo, PDF, arquivos compactados, torrents, documentos e metadados de midia |
 | Tema e prompt Zsh | Oh My Zsh clonado pelo perfil e zsh-syntax-highlighting via APT | Permite usar o tema agnoster ja configurado e realce de comandos |
 
-O cache Cachix do Hyprland e configurado globalmente com `sudo`, antes de instalar o compositor, e o daemon Nix e reiniciado, se estiver ativo, para carregar a configuracao. O script nao adiciona seu usuario a `trusted-users`, pois isso concede poderes equivalentes a root no Nix. O NixGL disponibiliza wrappers Mesa, NVIDIA e NVIDIA hibrida; nenhum driver NVIDIA e instalado por este perfil. O script tambem adiciona o PPA do GRUB Customizer para mante-lo disponivel nas duas versoes do Ubuntu.
+O cache Cachix do Hyprland e configurado globalmente com `sudo`, antes de instalar o compositor, e o daemon Nix e reiniciado, se estiver ativo, para carregar a configuracao. O script nao adiciona seu usuario a `trusted-users`, pois isso concede poderes equivalentes a root no Nix. O wrapper Mesa e instalado sempre; os wrappers NVIDIA so sao instalados se o driver proprietario ja estiver ativo em `/proc/driver/nvidia/version`. O perfil nao instala drivers de video. O script tambem adiciona o PPA do GRUB Customizer para mante-lo disponivel nas duas versoes do Ubuntu.
 
 ## Atalhos
 
@@ -55,7 +55,7 @@ Alt+F ativa tela cheia, Alt+S escolhe o layout Master, Alt+W agrupa janelas em a
 
 Alt+Shift+C recarrega a configuracao; Alt+Shift+R tambem recarrega, como alternativa ao antigo reinicio do i3. Alt+B mostra ou esconde a Waybar; Alt+Shift+G abre os controles de espacamento.
 
-Super+D abre o launcher; Super+F ou Super+Shift+X abre o menu de energia. Super+X escolhe a GPU da sessao e exige sair e entrar novamente para aplicar. Super+C troca entre os esquemas DARK, LIGHT e GRUN. Super+L alterna entre os layouts globais Dwindle e Master e guarda a escolha para o proximo login. Super+T alterna o touchpad quando um dispositivo com nome contendo “touchpad” estiver presente.
+Super+D abre o launcher; Super+F ou Super+Shift+X abre o menu de energia. Super+X escolhe entre os wrappers de GPU instalados e exige sair e entrar novamente para aplicar; as opcoes NVIDIA so aparecem se o driver proprietario ja estiver ativo quando o instalador rodar. Super+C troca entre os esquemas DARK, LIGHT e GRUN. Super+L alterna entre os layouts globais Dwindle e Master e guarda a escolha para o proximo login. Super+T alterna o touchpad quando um dispositivo com nome contendo “touchpad” estiver presente.
 
 Print seleciona uma regiao, salva PNG em `~/Pictures/Screenshots` e copia a imagem; Super+Print copia a selecao sem criar arquivo. As teclas de audio e brilho preservam os atalhos Super+F1..F8 e as teclas multimidia do teclado.
 

@@ -121,8 +121,12 @@ if systemctl is-active --quiet nix-daemon.service; then
   sudo systemctl restart nix-daemon.service
 fi
 nix --extra-experimental-features 'nix-command flakes' profile add --impure github:nix-community/nixGL#nixGLIntel
-nix --extra-experimental-features 'nix-command flakes' profile add --impure github:nix-community/nixGL#nixGLNvidia
-nix --extra-experimental-features 'nix-command flakes' profile add --impure github:nix-community/nixGL#nixGLNvidiaBumblebee
+if [ -r /proc/driver/nvidia/version ] && grep -Eq 'Kernel Module[[:space:]]+[0-9]+\.[0-9]+' /proc/driver/nvidia/version; then
+  nix --extra-experimental-features 'nix-command flakes' profile add --impure github:nix-community/nixGL#nixGLNvidia
+  nix --extra-experimental-features 'nix-command flakes' profile add --impure github:nix-community/nixGL#nixGLNvidiaBumblebee
+else
+  printf 'Driver NVIDIA proprietario nao detectado; wrappers opcionais da NVIDIA foram ignorados.\n'
+fi
 nix --extra-experimental-features 'nix-command flakes' profile add github:hyprwm/Hyprland/v0.55.4
 nix --extra-experimental-features 'nix-command flakes' profile add nixpkgs#tmux
 nix --extra-experimental-features 'nix-command flakes' profile add nixpkgs#nodejs_22

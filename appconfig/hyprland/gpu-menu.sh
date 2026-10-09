@@ -2,7 +2,15 @@
 set -eu
 
 config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
-choice="$(printf 'mesa\nnvidia\nnvidia-hybrid\n' | rofi -dmenu -i -p 'GPU da sessao')" || exit 0
+nix_profile="$HOME/.nix-profile/bin"
+choices=(mesa)
+if [ -x "$nix_profile/nixGLNvidia" ]; then
+  choices+=(nvidia)
+fi
+if [ -x "$nix_profile/nixGLNvidiaBumblebee" ]; then
+  choices+=(nvidia-hybrid)
+fi
+choice="$(printf '%s\n' "${choices[@]}" | rofi -dmenu -i -p 'GPU da sessao')" || exit 0
 case "$choice" in
   mesa|nvidia|nvidia-hybrid)
     install -d "$config_home/hypr"
