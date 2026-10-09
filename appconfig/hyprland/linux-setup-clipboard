@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -eu
+
+action="${1:-copy}"
+case "$action" in
+  copy)
+    if command -v wl-copy >/dev/null 2>&1; then
+      exec wl-copy
+    elif command -v xclip >/dev/null 2>&1; then
+      exec xclip -selection clipboard -i
+    else
+      printf 'Neither wl-copy nor xclip is available.\n' >&2
+      exit 127
+    fi
+    ;;
+  paste)
+    if command -v wl-paste >/dev/null 2>&1; then
+      exec wl-paste --no-newline
+    elif command -v xclip >/dev/null 2>&1; then
+      exec xclip -selection clipboard -o
+    else
+      printf 'Neither wl-paste nor xclip is available.\n' >&2
+      exit 127
+    fi
+    ;;
+  *)
+    printf 'Usage: %s {copy|paste}\n' "$0" >&2
+    exit 2
+    ;;
+esac

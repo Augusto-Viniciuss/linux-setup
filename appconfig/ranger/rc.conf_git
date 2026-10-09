@@ -57,7 +57,7 @@ set vcs_aware true
 # State of the three backends git, hg, bzr. The possible states are
 # disabled, local (only show local info), enabled (show local and remote
 # information).
-t vcs_backend_git enabled # EPIGEN_DEL_LINE_TOMAS
+set vcs_backend_git enabled
 # # set vcs_backend_git disabled # EPIGEN_ADD_LINE_TOMAS
 set vcs_backend_hg disabled
 set vcs_backend_bzr disabled
@@ -67,16 +67,15 @@ set preview_images true
 
 # Set the preview image method. Supported methods:
 #
-# * w3m (default):
-#   Preview images in full color with the external command "w3mimgpreview"?
-#   This requires the console web browser "w3m" and a supported terminal.
-#   It has been successfully tested with "xterm" and "urxvt" without tmux.
+# * kitty:
+#   Display image previews using Kitty's graphics protocol, including through
+#   tmux when allow-passthrough is enabled.
 #
 # * iterm2:
 #   Preview images in full color using iTerm2 image previews
 #   (http://iterm2.com/images.html). This requires using iTerm2 compiled
 #   with image preview support.
-set preview_images_method w3m
+set preview_images_method kitty
 
 # Use a unicode "..." character to mark cut-off filenames?
 set unicode_ellipsis false
@@ -334,9 +333,9 @@ map gh cd ~
 map E  edit
 map du shell -p du --max-depth=1 -h --apparent-size
 map dU shell -p du --max-depth=1 -h --apparent-size | sort -rh
-map yp shell -f echo -n %d/%f | xsel -i; xsel -o | xsel -i -b
-map yd shell -f echo -n %d    | xsel -i; xsel -o | xsel -i -b
-map yn shell -f echo -n %f    | xsel -i; xsel -o | xsel -i -b
+map yp copy_clipboard path
+map yd copy_clipboard directory
+map yn copy_clipboard name
 
 # Filesystem Operations
 map =  chmod

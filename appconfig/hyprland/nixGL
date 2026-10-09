@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -eu
+
+config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+gpu_mode="${LINUX_SETUP_HYPRLAND_GPU:-mesa}"
+if [ -z "${LINUX_SETUP_HYPRLAND_GPU:-}" ] && [ -r "$config_home/hypr/gpu" ]; then
+  IFS= read -r gpu_mode < "$config_home/hypr/gpu"
+fi
+
+nix_profile="$HOME/.nix-profile/bin"
+case "$gpu_mode" in
+  intel|mesa|amd) exec "$nix_profile/nixGLIntel" "$@" ;;
+  nvidia) exec "$nix_profile/nixGLNvidia" "$@" ;;
+  nvidia-hybrid) exec "$nix_profile/nixGLNvidiaBumblebee" "$@" ;;
+  *) printf 'Unknown Hyprland GPU setting: %s\n' "$gpu_mode" >&2; exit 2 ;;
+esac

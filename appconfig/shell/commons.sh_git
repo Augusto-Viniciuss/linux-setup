@@ -1,10 +1,6 @@
 # reload X configuration
-xrdb ~/.Xresources 2> /dev/null
-
-# set keyboard repeat rate
-xset r rate 350 55 2> /dev/null
-
-export TERM=rxvt-unicode-256color
+# Keep the terminal's own TERM value (for example, xterm-kitty).
+export TERM="${TERM:-xterm-256color}"
 
 export FZF_DEFAULT_OPTS='--height 25%'
 export FZF_DEFAULT_COMMAND='ag -l -f --nocolor -g ""'
@@ -69,7 +65,13 @@ gitUpdateSubmodules() {
   echo "Syncing git submodules"
   command git submodule sync
   echo "Updating git submodules"
-  command git submodule update --init --recursive
+  git_root="$(command git rev-parse --show-toplevel 2>/dev/null || true)"
+  if [ "${LINUX_SETUP_HYPRLAND_PROFILE:-0}" = "1" ] && [ "$git_root" = "${REPO_PATH:-}" ]; then
+    command git -C "$git_root" submodule update --init --depth 1 -- \
+      submodules/vim-plug submodules/tmuxinator submodules/vimiv
+  else
+    command git submodule update --init --recursive
+  fi
 
   if [ -e .gitman.yml ]; then
     if [[ ! $(git status .gitman.yml --porcelain) ]]; then # if .gitman.yml is unchanged
@@ -113,22 +115,34 @@ git() {
         # if we are in the 'linux-setup' repo, use the Profile manager
         if [[ "$ROOT_DIR" == "$GIT_PATH/linux-setup" ]]; then
 
-          PROFILE_MANAGER="$GIT_PATH/linux-setup/submodules/profile_manager/profile_manager.sh"
+          if [ "${LINUX_SETUP_HYPRLAND_PROFILE:-0}" = "1" ]; then
+            command git "$@"
 
-          bash -c "$PROFILE_MANAGER backup $GIT_PATH/linux-setup/appconfig/profile_manager/file_list.txt"
+            if [[ "$?" == "0" ]]; then
+              case $* in
+                pull*|checkout*)
+                  gitUpdateSubmodules
+                  ;;
+              esac
+            fi
+          else
+            PROFILE_MANAGER="$GIT_PATH/linux-setup/submodules/profile_manager/profile_manager.sh"
 
-          command git "$@"
+            bash -c "$PROFILE_MANAGER backup $GIT_PATH/linux-setup/appconfig/profile_manager/file_list.txt"
 
-          if [[ "$?" == "0" ]]; then
-            case $* in
-              pull*|checkout*) # TODO: should only work for checkout of a branch
-                gitUpdateSubmodules
-                ;;
-            esac
-          fi
+            command git "$@"
 
-          if [[ "$?" == "0" ]]; then
-            bash -c "$PROFILE_MANAGER deploy $GIT_PATH/linux-setup/appconfig/profile_manager/file_list.txt"
+            if [[ "$?" == "0" ]]; then
+              case $* in
+                pull*|checkout*) # TODO: should only work for checkout of a branch
+                  gitUpdateSubmodules
+                  ;;
+              esac
+            fi
+
+            if [[ "$?" == "0" ]]; then
+              bash -c "$PROFILE_MANAGER deploy $GIT_PATH/linux-setup/appconfig/profile_manager/file_list.txt"
+            fi
           fi
 
         # this is generic git repo subfolder
@@ -171,56 +185,14 @@ git() {
 
 # #}
 
-# #{ papis()
-
-papis() {
-
-  if [[ "$*" == "" ]];
-  then
-    command papis edit
-  else
-    case "$1" in
-
-      edit*)
-
-        shift
-
-        if [[ "$@" == "" ]]; then
-          command papis edit
-        else
-          # run the original command
-          command papis edit "$@"
-        fi
-
-        ;;
-
-      open*)
-
-        shift
-
-        if [[ "$@" == "" ]]; then
-          command papis open
-        else
-          # run the original command
-          command papis open "$@"
-        fi
-
-        ;;
-
-      *)
-        command papis "$@"
-      ;;
-
-    esac
-  fi
-}
-
-# #}
-
 # #{ ranger()
 
 ranger () {
-  command ranger --choosedir="/tmp/lastrangerdir" "$@"
+  if [ -n "${KITTY_WINDOW_ID:-}" ] || [ "$TERM" = "xterm-kitty" ]; then
+    command ranger --cmd="set preview_images true" --cmd="set preview_images_method kitty" --choosedir="/tmp/lastrangerdir" "$@"
+  else
+    command ranger --choosedir="/tmp/lastrangerdir" "$@"
+  fi
   LASTDIR=`cat "/tmp/lastrangerdir"`
   cd "$LASTDIR"
 }

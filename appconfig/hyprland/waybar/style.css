@@ -1,0 +1,36 @@
+* {
+  border: none;
+  border-radius: 0;
+  font-family: "Terminus", "Inconsolata", sans-serif;
+  font-size: 12px;
+  min-height: 0;
+}
+
+window#waybar {
+  background: #121212;
+  color: #dddddd;
+}
+
+#workspaces button {
+  padding: 0 8px;
+  color: #eeeeee;
+  background: #333333;
+}
+
+#workspaces button.active {
+  color: #ffffff;
+  background: #005faf;
+}
+
+#workspaces button.urgent {
+  color: #ffffff;
+  background: #ff0000;
+}
+
+#window, #custom-uav-status, #language, #mpris, #network, #pulseaudio, #battery, #cpu, #memory, #disk, #clock, #tray {
+  padding: 0 8px;
+}
+
+#custom-uav-status.offline {
+  color: #888888;
+}

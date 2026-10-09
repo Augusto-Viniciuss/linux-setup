@@ -32,7 +32,8 @@ export CTAGS_FILE_ONCE="~/tags-once"
 # create alisases
 alias sb="source ~/.bashrc"
 
-source "$REPO_PATH/appconfig/shell/commons.sh"
+source "$REPO_PATH/appconfig/shell/commons.sh_git"
+source "$REPO_PATH/appconfig/shell/ros2-env.sh"
 
 # is the shell running interactively
 case "$-" in
@@ -118,7 +119,9 @@ runVim() {
 alias vim=runVim
 
 # source tmuxinator
-source $REPO_PATH/submodules/tmuxinator/completion/tmuxinator.bash
+if [ -f "$REPO_PATH/submodules/tmuxinator/completion/tmuxinator.bash" ]; then
+  source "$REPO_PATH/submodules/tmuxinator/completion/tmuxinator.bash"
+fi
 
 # by default, athame should be off
 export ATHAME_ENABLED=0

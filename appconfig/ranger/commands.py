@@ -13,6 +13,39 @@ from ranger.api.commands import *
 # You can import any python module as needed.
 import os
 
+
+class copy_clipboard(Command):
+    """:copy_clipboard <path|directory|name>
+
+    Copy the selected file's path, containing directory, or name to Wayland's
+    clipboard. This replaces the old xsel bindings used under X11.
+    """
+
+    def execute(self):
+        import subprocess
+
+        selection = self.arg(1) or "path"
+        if not self.fm.thisfile:
+            self.fm.notify("No file is selected.", bad=True)
+            return
+
+        path = self.fm.thisfile.path
+        if selection == "directory":
+            value = os.path.dirname(path)
+        elif selection == "name":
+            value = os.path.basename(path)
+        elif selection == "path":
+            value = path
+        else:
+            self.fm.notify("Use path, directory, or name.", bad=True)
+            return
+
+        try:
+            subprocess.run(["wl-copy"], input=value.encode(), check=True)
+            self.fm.notify("Copied to clipboard: " + value)
+        except (OSError, subprocess.CalledProcessError) as error:
+            self.fm.notify("Could not copy to clipboard: " + str(error), bad=True)
+
 # Any class that is a subclass of "Command" will be integrated into ranger as a
 # command.  Try typing ":my_edit<ENTER>" in ranger!
 class my_edit(Command):

@@ -1,0 +1,49 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 26,
+  "modules-left": ["hyprland/workspaces"],
+  "modules-center": ["hyprland/window"],
+  "modules-right": ["custom/uav-status", "hyprland/language", "mpris", "network", "pulseaudio", "battery", "cpu", "memory", "disk", "clock", "tray"],
+  "hyprland/workspaces": {
+    "format": "{name}",
+    "format-icons": {
+      "1": "1: ", "2": "2: ", "3": "3: ", "4": "4: ",
+      "5": "5", "6": "6", "7": "7", "8": "8", "9": "9", "10": "10"
+    }
+  },
+  "hyprland/window": { "max-length": 70 },
+  "cpu": { "format": "CPU {usage}%" },
+  "memory": { "format": "RAM {percentage}%" },
+  "hyprland/language": { "format": "{short}", "format-en": "US", "format-cz": "CZ" },
+  "mpris": {
+    "format": "{player_icon} {title}",
+    "format-paused": "{status_icon} {title}",
+    "max-length": 32,
+    "player-icons": { "default": "▶", "vlc": "🎬" },
+    "status-icons": { "paused": "⏸" }
+  },
+  "custom/uav-status": {
+    "exec": "~/.config/waybar/uav-status.sh",
+    "return-type": "json",
+    "interval": 10
+  },
+  "network": {
+    "format-wifi": "WIFI {essid} {signalStrength}%",
+    "format-ethernet": "ETH {ifname}",
+    "format-disconnected": "OFFLINE"
+  },
+  "pulseaudio": {
+    "format": "VOL {volume}%",
+    "format-muted": "MUTE",
+    "on-click": "pavucontrol"
+  },
+  "battery": {
+    "format": "BAT {capacity}%",
+    "format-charging": "BAT +{capacity}%",
+    "format-plugged": "AC"
+  },
+  "disk": { "interval": 30, "path": "/", "format": "DISK {percentage_used}%" },
+  "clock": { "format": "{:%d/%m %H:%M}" },
+  "tray": { "spacing": 8 }
+}

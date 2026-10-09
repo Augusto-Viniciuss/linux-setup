@@ -1,4 +1,5 @@
-REPO_PATH="$(cd "$(dirname "$_")"/../..; pwd)"
+: "${GIT_PATH:=$HOME/git}"
+: "${REPO_PATH:=$GIT_PATH/linux-setup}"
 
 # detect the OS version
 var1="18.04"
@@ -25,9 +26,14 @@ fi
 # export EDITOR="/usr/bin/vim --servername dog --cmd 'let g:user_mode=1'"
 # EPIGEN_ADD_BLOCK_BETTER_YCM }
 
-# set the TMUX_BIN, prefer the user-compiled one
-[ -f /usr/local/bin/tmux ] && export TMUX_BIN=/usr/local/bin/tmux
-[ ! -f /usr/local/bin/tmux ] && export TMUX_BIN=/usr/bin/tmux
+# Prefer the Nix tmux package when installed (used for Kitty image passthrough).
+if [ -x "$HOME/.nix-profile/bin/tmux" ]; then
+  export TMUX_BIN="$HOME/.nix-profile/bin/tmux"
+elif [ -x /usr/local/bin/tmux ]; then
+  export TMUX_BIN=/usr/local/bin/tmux
+else
+  export TMUX_BIN=/usr/bin/tmux
+fi
 
 # create alisases
 alias sb="source ~/.zshrc"
@@ -66,7 +72,8 @@ bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
 
 # source the mutual additions for all shells
-source "$REPO_PATH/appconfig/shell/commons.sh"
+source "$REPO_PATH/appconfig/shell/commons.sh_git"
+source "$REPO_PATH/appconfig/shell/ros2-env.sh"
 
 # alias the "bash's" command history to "zshell's" command read
 # handy for common tmuxinator scripts
@@ -168,7 +175,13 @@ kzsh() {
 }
 
 # source tmuxinator
-source "$REPO_PATH/submodules/tmuxinator/completion/tmuxinator.zsh"
+if [ -f "$REPO_PATH/submodules/tmuxinator/completion/tmuxinator.zsh" ]; then
+  source "$REPO_PATH/submodules/tmuxinator/completion/tmuxinator.zsh"
+fi
+
+if [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+  source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
 
 # by default, athame should be off
 export ATHAME_ENABLED=0

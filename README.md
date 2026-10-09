@@ -1,51 +1,22 @@
 # Augusto's Linux environment
 
-| Ubuntu               | Architecture | Status                                                                                                                                                           |
-| -------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 22.04 Jammy          | AMD64        | [![Jammy](https://github.com/Augusto-Viniciuss/linux-setup/actions/workflows/jammy.yml/badge.svg)](https://github.com/Augusto-Viniciuss/linux-setup/actions/workflows/jammy.yml)          |
-| 20.04 Focal          | AMD64        | [![Focal](https://github.com/Augusto-Viniciuss/linux-setup/actions/workflows/focal.yml/badge.svg)](https://github.com/Augusto-Viniciuss/linux-setup/actions/workflows/focal.yml)          |
+| Ubuntu | Architecture | Status |
+| --- | --- | --- |
+| 22.04 Jammy | AMD64 | [![Jammy](https://github.com/Augusto-Viniciuss/linux-setup/actions/workflows/jammy.yml/badge.svg)](https://github.com/Augusto-Viniciuss/linux-setup/actions/workflows/jammy.yml) |
+| 24.04 Noble | AMD64 | Perfil Hyprland em preparacao para teste |
+| 20.04 Focal | AMD64 | Perfil antigo |
 
-## Summary
+## Perfil novo: Hyprland e Kitty
 
-This repo contains settings of Augusto's Linux work environment.
+O perfil para Ubuntu 22.04 e 24.04 conserva Vim, plugins, Python, tmux, Ranger, SSH e ferramentas escolhidas, e troca i3/urxvt por Hyprland/Kitty. O guia lista os aplicativos, as dependencias novas, os atalhos adaptados e os recursos sem equivalente direto: [guia de migracao e instalacao](docs/migracao-hyprland-ubuntu.md).
 
-It could be summarized as follows:
-* **Ubuntu 22.04**
-* **i3** (i3gaps) tiling window manager with i3bar and vim-like controls
-  * **i3-layout-manager** for saving and loading window layouts
-* **urxvt** terminal emulator with ability to show images (when using the *ranger* file manager)
-* **tmux** terminal multiplexer is running all the time
-  * **tmuxinator** for automation of tmux session
-  * vim-compatible key bindings for split switching
-* **vim** is everywhere
-  * pluginized for smooth c++ and ROS development
-  * youcompleteme
-  * UltiSnips
-  * shared clipboards between vim, tmux and OS
-  * Ctrl+P
-  * smooth latex development with vimtex and zathura
-  * Tim Pope is the king
-* **athame** gives you vim in the terminal (zsh)
-  * handfull of plugins in terminal: ultisnips, vim-surround, targets.vim, vim-exchange, etc.
-* **zsh** better shell for everyday use
-* **ranger** terminal file manager
-* **profile_manager** and **epigen** for switching between machine-specific configurations (profiles within dotfiles)
-  * all-in-one configuration, no git branching, no more cherrypicking
-  * sharing configs between multiple users
-  * sharing configs between different machines
-  * seamless switching of colorschemes
+O script do perfil novo e `appconfig/hyprland/install.sh`. Ele exige Nix ja instalado e nao instala nem configura ROS; Humble (22.04) ou Jazzy (24.04) so e carregado pelo shell se voce o instalar separadamente em `/opt/ros`.
 
-To clone and install everything run following code. **BEWARE**, running this will **DELETE** your current .i3, tmux, vim, etc. dotfiles.
-```bash
-cd /tmp
-echo "mkdir -p ~/git
-cd ~/git
-sudo apt-get -y install git
-git clone https://github.com/Augusto-Viniciuss/linux-setup.git
-cd linux-setup
-./install.sh" > run.sh && source run.sh
-```
-**Calling install.sh repeatedly** will not cause acumulation of code in your .bashrc, so feel free to update your configuration by rerunning it.
+> `./install.sh` na raiz continua sendo o instalador antigo de i3/urxvt. Ele ainda instala o conjunto completo legado; nao o execute para testar o perfil Hyprland.
+
+## Legacy
+
+Este repositorio tambem contem a configuracao antiga baseada em i3, urxvt e nos perfis locais. O seu instalador principal ainda e legado e nao representa a lista enxuta descrita no guia acima.
 
 # How to? -> [wiki](https://github.com/Klaxalk/linux-setup/wiki)
 

@@ -30,6 +30,7 @@ call plug#begin("~/.vim/plugged")
 
 " which plugins should not be loaded outside of normal session (not in athame)
 if g:user_mode == "1"
+  Plug 'neoclide/coc.nvim', {'tag': 'v0.0.81'}
 
   " A colorful, dark color scheme
   Plug 'nanotech/jellybeans.vim'
@@ -119,8 +120,8 @@ if g:user_mode == "1"
   " youcompleteme
   " automatic code completion for C++ and more
   " EPIGEN_DEL_BLOCK_VIKTOR_BIGBOX {
-  Plug 'ycm-core/YouCompleteMe', { 'commit': '7c4d053', 'do': './install.py --clangd-completer' }
-  Plug 'rdnetto/YCM-Generator', { 'commit': '9cb722a' }
+  "Plug 'ycm-core/YouCompleteMe', {'do': './install.py --clangd-completer' }
+  "Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
   " enable airline YCM status
   let g:airline#extensions#ycm#enabled = 1
   " EPIGEN_DEL_BLOCK_VIKTOR_BIGBOX }
@@ -244,7 +245,7 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'ardagnir/united-front'
 
 " snippet completion
-Plug 'SirVer/ultisnips'
+"Plug 'SirVer/ultisnips'
 Plug 'vim-scripts/DoxygenToolkit.vim'
 
 " powerful targeting of text parts
@@ -515,7 +516,7 @@ set wildignore+=*/Downloads/**,*/Desktop/**,*/build/**
 " set path for filename suggestions
 " ** means "in any subfolder"
 set path+=~/git/**
-set path+=~/.vim/UltiSnips/**
+"set path+=~/.vim/UltiSnips/**
 
 " set jk in insert mode as ESC
 " EPIGEN_ADD_BLOCK_TOMAS EPIGEN_ADD_BLOCK_VIT {
@@ -617,7 +618,7 @@ autocmd BufWritePost *.sk AsyncRun bash -c '%:p:h/compile_sketch.sh %:t'
 source ~/.vim/pluginconfig/vim-multiple-cursors.vim
 
 " config for UltiSnips
-source ~/.vim/pluginconfig/ultisnips.vim
+"source ~/.vim/pluginconfig/ultisnips.vim
 
 " config for vim-commentary
 source ~/.vim/pluginconfig/vim-commentary.vim
@@ -625,7 +626,7 @@ source ~/.vim/pluginconfig/vim-commentary.vim
 " additional settings only for athame
 if g:user_mode == "0"
 
-  nnoremap <leader>u Ivim ~/.vim/UltiSnips/athame.snippets
+  "nnoremap <leader>u Ivim ~/.vim/UltiSnips/athame.snippets
   nnoremap <leader>ww Ivim ~/git/notes/index.md
 
   nnoremap OA $a<up>
@@ -706,3 +707,166 @@ nnoremap <leader>op :delmark a:norm ma*:%s//&_/g:norm `a:delmark a
 if !empty(glob("~/.my.vimrc"))
   source ~/.my.vimrc
 endif
+
+" let g:clang_format#code_style = "Google"
+" let g:clang_format#style_options = {
+"       \ 'Standard': 'c++17',
+"       \ 'BasedOnStyle': 'Google',
+"       \ 'AccessModifierOffset': -2,
+"       \ 'ColumnLimit': 100,
+"       \ 'MaxEmptyLinesToKeep': 1,
+"       \ 'AlignAfterOpenBracket': 'AlwaysBreak',
+"       \ 'ConstructorInitializerIndentWidth': 0,
+"       \ 'ContinuationIndentWidth': 2,
+"       \ 'DerivePointerAlignment': 'false',
+"       \ 'PointerAlignment': 'Middle',
+"       \ 'ReflowComments': 'true',
+"       \ 'AllowShortLoopsOnASingleLine': 'false',
+"       \ 'AllowShortBlocksOnASingleLine': 'false',
+"       \ 'AllowShortFunctionsOnASingleLine': 'None',
+"       \ 'AllowShortCaseLabelsOnASingleLine': 'false',
+"       \ 'AllowShortIfStatementsOnASingleLine': 'Never',
+"       \ 'AllowShortLambdasOnASingleLine': 'All',
+"       \ 'AlwaysBreakTemplateDeclarations': 'Yes',
+"       \ 'AlignConsecutiveAssignments': 'false',
+"       \ 'AlignConsecutiveDeclarations': 'false',
+"       \ 'AlignConsecutiveMacros': 'false',
+"       \ 'AlignOperands': 'Align',
+"       \ 'AlignTrailingComments': 'true',
+"       \ 'SpaceBeforeParens': 'ControlStatements',
+"       \ 'SpaceBeforeAssignmentOperators': 'true',
+"       \ 'SpaceBeforeRangeBasedForLoopColon': 'true',
+"       \ 'SpacesInParentheses': 'false',
+"       \ 'SpacesInSquareBrackets': 'false',
+"       \ 'SpacesInAngles': 'false',
+"       \ 'BreakBeforeBinaryOperators': 'None',
+"       \ 'BreakBeforeTernaryOperators': 'true',
+"       \ 'BreakConstructorInitializers': 'BeforeColon',
+"       \ 'BreakInheritanceList': 'BeforeColon',
+"       \ 'KeepEmptyLinesAtTheStartOfBlocks': 'false',
+"       \ 'NamespaceIndentation': 'None',
+"       \ 'FixNamespaceComments': 'true',
+"       \ 'SortIncludes': 'CaseSensitive',
+"       \ 'IncludeBlocks': 'Regroup',
+"       \ 'BreakBeforeBraces': 'Custom',
+"       \ 'BraceWrapping': {
+"       \   'AfterClass': 'true',
+"       \   'AfterControlStatement': 'Never',
+"       \   'AfterEnum': 'false',
+"       \   'AfterFunction': 'true',
+"       \   'AfterNamespace': 'true',
+"       \   'AfterObjCDeclaration': 'false',
+"       \   'AfterStruct': 'true',
+"       \   'AfterUnion': 'true',
+"       \   'AfterExternBlock': 'false',
+"       \   'BeforeCatch': 'false',
+"       \   'BeforeElse': 'false',
+"       \   'BeforeLambdaBody': 'false',
+"       \   'BeforeWhile': 'false',
+"       \   'IndentBraces': 'false',
+"       \   'SplitEmptyFunction': 'false',
+"       \   'SplitEmptyRecord': 'false',
+"       \   'SplitEmptyNamespace': 'true'
+"       \ },
+"       \ 'IncludeCategories': [
+"       \   { 'Regex': '^".*\/.*\.hpp"', 'Priority': 1, 'SortPriority': 1 },
+"       \   { 'Regex': '^<(c[a-z]+|[^/]+\.h)>$', 'Priority': 2, 'SortPriority': 2 },
+"       \   { 'Regex': '^<[a-z_]+>$', 'Priority': 3, 'SortPriority': 3 },
+"       \   { 'Regex': '^<(Eigen|boost|pcl|opencv2|gtsam|sophus|yaml-cpp)\/.*>', 'Priority': 4, 'SortPriority': 4 },
+"       \   { 'Regex': '^("|<)(rclcpp|rclcpp_.*|rmw|rcutils|tf2|tf2_.*|image_transport|cv_bridge)\/.*', 'Priority': 5, 'SortPriority': 5 },
+"       \   { 'Regex': '^("|<)std_srvs\/.*', 'Priority': 6, 'SortPriority': 6 },
+"       \   { 'Regex': '^("|<)geometry_msgs\/.*', 'Priority': 7, 'SortPriority': 7 },
+"       \   { 'Regex': '^("|<)sensor_msgs\/.*', 'Priority': 8, 'SortPriority': 8 },
+"       \   { 'Regex': '^("|<)nav_msgs\/.*', 'Priority': 9, 'SortPriority': 9 },
+"       \   { 'Regex': '^("|<)laser_msgs\/.*', 'Priority': 10, 'SortPriority': 10 },
+"       \   { 'Regex': '^("|<)px4_msgs\/.*', 'Priority': 11, 'SortPriority': 11 },
+"       \   { 'Regex': '^("|<)ardupilot_msgs\/.*', 'Priority': 12, 'SortPriority': 12 },
+"       \   { 'Regex': '^("|<).*\.(hpp|h)("|>)$', 'Priority': 13, 'SortPriority': 13 },
+"       \   { 'Regex': '.*', 'Priority': 14, 'SortPriority': 14 }
+"       \ ]
+"       \ }
+
+let g:coc_disable_startup_warning = 1
+
+let g:coc_global_extensions = ['coc-clangd', 'coc-cmake']
+
+autocmd BufWritePre *.cpp,*.hpp,*.cc,*.h,*.cmake,CMakeLists.txt silent! call CocAction('format')
+
+function! FormatPythonCustom()
+    let l:winview = winsaveview()
+    let l:was_empty = (line('$') == 1 && getline(1) == '')
+
+    silent! execute '%!python3 -m isort --force-single-line-imports --line-length 100 -q - 2>/dev/null'
+    if v:shell_error || (!l:was_empty && line('$') == 1 && getline(1) == '')
+        silent! undo
+        echohl WarningMsg | echo "Falha no isort: formatação cancelada para proteger seu código." | echohl None
+        call winrestview(l:winview)
+        return
+    endif
+
+    silent! execute '%!python3 -m autopep8 --max-line-length 100 - 2>/dev/null'
+    if v:shell_error || (!l:was_empty && line('$') == 1 && getline(1) == '')
+        silent! undo
+        echohl WarningMsg | echo "Falha no autopep8: formatação cancelada para proteger seu código." | echohl None
+        call winrestview(l:winview)
+        return
+    endif
+
+    call winrestview(l:winview)
+endfunction
+
+autocmd BufRead,BufNewFile *.launch.py set filetype=python
+autocmd BufWritePre *.py,*.launch.py call FormatPythonCustom()
+
+" ==============================================================================
+" FORMATAÇÃO PARA XML (package.xml, URDF, XACRO) VIA XMLLINT
+" ==============================================================================
+function! FormatXML()
+    let l:winview = winsaveview()
+
+    " 1. Força o padrão do ROS 2 de 2 espaços por recuo no buffer atual
+    setlocal tabstop=2 shiftwidth=2 expandtab
+
+    " 2. Usa o alinhador nativo do Vim (gg=G) para recuar as tags sem apagar linhas
+    silent! normal! gg=G
+
+    call winrestview(l:winview)
+endfunction
+
+" Ativa a formatação automática ao salvar (:w) para XML e YAML
+autocmd BufWritePre *.xml,*.urdf,*.xacro call FormatXML()
+
+" ==============================================================================
+" FORMATAÇÃO PARA SHELL SCRIPT (.sh, .bash) VIA SHFMT
+" ==============================================================================
+function! FormatShell()
+    let l:winview = winsaveview()
+    let l:was_empty = (line('$') == 1 && getline(1) == '')
+
+    " Flags utilizadas no shfmt:
+    " -i 2: Indenta com 2 espaços (para manter o padrão visual do ROS 2)
+    " -ci:  Indenta blocos 'case/esac' corretamente
+    " -sr:  Adiciona um espaço após operadores de redirecionamento (ex: > e <)
+    silent! execute '%!shfmt -i 2 -ci -sr - 2>/dev/null'
+    
+    if v:shell_error || (!l:was_empty && line('$') == 1 && getline(1) == '')
+        silent! undo
+        echohl WarningMsg | echo "Falha no shfmt: Erro de sintaxe no seu script Shell." | echohl None
+        call winrestview(l:winview)
+        return
+    endif
+
+    call winrestview(l:winview)
+endfunction
+
+" Ativa a formatação automática ao salvar (:w) arquivos de script
+autocmd BufWritePre *.sh,*.bash call FormatShell()
+
+" ==============================================================================
+" CHECAGEM DE BUGS EM SHELL SCRIPT VIA VIM NATIVO (SHELLCHECK + QUICKFIX)
+" ==============================================================================
+" 1. Diz para o Vim usar o shellcheck com saída formatada no estilo GCC
+autocmd FileType sh,bash setlocal makeprg=shellcheck\ -f\ gcc\ %
+
+" 2. Cria o atalho <F9>: Roda a checagem instantaneamente sem sair do arquivo
+autocmd FileType sh,bash nnoremap <buffer> <silent> <F9> :silent! make! <bar> cwindow<CR>
