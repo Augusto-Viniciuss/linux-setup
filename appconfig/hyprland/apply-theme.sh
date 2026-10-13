@@ -9,10 +9,14 @@ fi
 
 case "$theme" in
   DARK) active='rgba(005fafff)'; inactive='rgba(333333ff)' ;;
-  LIGHT) active='rgba(005fafff)'; inactive='rgba(aaaaaaff)' ;;
-  GRUN) active='rgba(87af5fff)'; inactive='rgba(4e4e4eff)' ;;
+  LIGHT) active='rgba(aaaaaaff)'; inactive='rgba(ddddddff)' ;;
+  GRUN) active='rgba(3f8f00ff)'; inactive='rgba(333333ff)' ;;
   *) printf 'Tema invalido salvo em %s/hypr/theme: %s\n' "$config_home" "$theme" >&2; exit 2 ;;
 esac
 
-hyprctl keyword general:col.active_border "$active"
-hyprctl keyword general:col.inactive_border "$inactive"
+install -m 0644 "$config_home/kitty/themes/$theme.conf" "$config_home/kitty/current-theme.conf"
+install -m 0644 "$config_home/rofi/themes/$theme.rasi" "$config_home/rofi/current-theme.rasi"
+install -m 0644 "$config_home/waybar/themes/$theme.css" "$config_home/waybar/theme.css"
+
+hyprctl eval "hl.config({ general = { col = { active_border = \"$active\", inactive_border = \"$inactive\" } }, group = { groupbar = { col = { active = \"$active\", inactive = \"$inactive\" } } } })"
+pkill -USR2 -x waybar 2>/dev/null || true

@@ -2,48 +2,82 @@
   "layer": "top",
   "position": "top",
   "height": 26,
-  "modules-left": ["hyprland/workspaces"],
-  "modules-center": ["hyprland/window"],
-  "modules-right": ["custom/uav-status", "hyprland/language", "mpris", "network", "pulseaudio", "battery", "cpu", "memory", "disk", "clock", "tray"],
-  "hyprland/workspaces": {
-    "format": "{name}",
-    "format-icons": {
-      "1": "1: ", "2": "2: ", "3": "3: ", "4": "4: ",
-      "5": "5", "6": "6", "7": "7", "8": "8", "9": "9", "10": "10"
-    }
-  },
-  "hyprland/window": { "max-length": 70 },
-  "cpu": { "format": "CPU {usage}%" },
-  "memory": { "format": "RAM {percentage}%" },
-  "hyprland/language": { "format": "{short}", "format-en": "US", "format-cz": "CZ" },
-  "mpris": {
-    "format": "{player_icon} {title}",
-    "format-paused": "{status_icon} {title}",
-    "max-length": 32,
-    "player-icons": { "default": "▶", "vlc": "🎬" },
-    "status-icons": { "paused": "⏸" }
+  "modules-left": [
+    "custom/ws1", "custom/ws2", "custom/ws3", "custom/ws4", "custom/ws5",
+    "custom/ws6", "custom/ws7", "custom/ws8", "custom/ws9", "custom/ws10"
+  ],
+  "modules-center": [],
+  "modules-right": [
+    "custom/uav-status",
+    "custom/keyboard-layout",
+    "custom/online-status",
+    "network",
+    "pulseaudio",
+    "battery",
+    "disk",
+    "cpu",
+    "clock",
+    "custom/power"
+  ],
+  "custom/ws1": { "exec": "~/.config/waybar/workspace-indicator.sh 1", "return-type": "json", "interval": 1, "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=1}))'" },
+  "custom/ws2": { "exec": "~/.config/waybar/workspace-indicator.sh 2", "return-type": "json", "interval": 1, "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=2}))'" },
+  "custom/ws3": { "exec": "~/.config/waybar/workspace-indicator.sh 3", "return-type": "json", "interval": 1, "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=3}))'" },
+  "custom/ws4": { "exec": "~/.config/waybar/workspace-indicator.sh 4", "return-type": "json", "interval": 1, "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=4}))'" },
+  "custom/ws5": { "exec": "~/.config/waybar/workspace-indicator.sh 5", "return-type": "json", "interval": 1, "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=5}))'" },
+  "custom/ws6": { "exec": "~/.config/waybar/workspace-indicator.sh 6", "return-type": "json", "interval": 1, "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=6}))'" },
+  "custom/ws7": { "exec": "~/.config/waybar/workspace-indicator.sh 7", "return-type": "json", "interval": 1, "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=7}))'" },
+  "custom/ws8": { "exec": "~/.config/waybar/workspace-indicator.sh 8", "return-type": "json", "interval": 1, "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=8}))'" },
+  "custom/ws9": { "exec": "~/.config/waybar/workspace-indicator.sh 9", "return-type": "json", "interval": 1, "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=9}))'" },
+  "custom/ws10": { "exec": "~/.config/waybar/workspace-indicator.sh 10", "return-type": "json", "interval": 1, "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=10}))'" },
+  "custom/keyboard-layout": {
+    "exec": "~/.config/waybar/keyboard-layout.sh",
+    "return-type": "json",
+    "interval": 2,
+    "tooltip": true
   },
   "custom/uav-status": {
     "exec": "~/.config/waybar/uav-status.sh",
     "return-type": "json",
     "interval": 10
   },
+  "custom/online-status": {
+    "exec": "~/.config/waybar/online-status.sh",
+    "return-type": "json",
+    "interval": 20
+  },
   "network": {
-    "format-wifi": "WIFI {essid} {signalStrength}%",
-    "format-ethernet": "ETH {ifname}",
-    "format-disconnected": "OFFLINE"
+    "format-wifi": " {essid} {signalStrength}%",
+    "format-ethernet": " {ifname}",
+    "format-disconnected": "OFFLINE",
+    "tooltip-format-wifi": "{ifname}: {ipaddr}",
+    "tooltip-format-ethernet": "{ifname}: {ipaddr}",
+    "on-click": "nm-connection-editor"
   },
   "pulseaudio": {
-    "format": "VOL {volume}%",
+    "format": " {volume}%",
     "format-muted": "MUTE",
     "on-click": "pavucontrol"
   },
   "battery": {
-    "format": "BAT {capacity}%",
-    "format-charging": "BAT +{capacity}%",
+    "format": "⚡ {capacity}%",
+    "format-charging": "⚡ +{capacity}%",
     "format-plugged": "AC"
   },
-  "disk": { "interval": 30, "path": "/", "format": "DISK {percentage_used}%" },
-  "clock": { "format": "{:%d/%m %H:%M}" },
-  "tray": { "spacing": 8 }
+  "disk": {
+    "interval": 30,
+    "path": "/",
+    "format": "SSD {percentage_used}%"
+  },
+  "cpu": {
+    "interval": 5,
+    "format": " {usage}%"
+  },
+  "clock": {
+    "format": "{:%d/%m/%Y %H:%M:%S}"
+  },
+  "custom/power": {
+    "exec": "printf '\\n'",
+    "interval": "once",
+    "on-click": "~/.config/hypr/system-menu.sh"
+  }
 }

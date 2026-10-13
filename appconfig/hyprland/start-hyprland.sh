@@ -7,8 +7,15 @@ export XDG_CURRENT_DESKTOP=Hyprland
 export XDG_SESSION_DESKTOP=Hyprland
 export XDG_SESSION_TYPE=wayland
 export XDG_DATA_DIRS="$HOME/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
+# A prior X11/Ubuntu session can leave DISPLAY=:0 in the shared user manager.
+# That value points at no X server in this Wayland session, so let Hyprland
+# publish DISPLAY only after its own XWayland server is available.
+unset DISPLAY WAYLAND_DISPLAY HYPRLAND_INSTANCE_SIGNATURE
+if command -v systemctl >/dev/null 2>&1; then
+  systemctl --user unset-environment DISPLAY WAYLAND_DISPLAY HYPRLAND_INSTANCE_SIGNATURE || true
+fi
 if command -v dbus-update-activation-environment >/dev/null 2>&1; then
-  dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE XDG_DATA_DIRS || true
+  dbus-update-activation-environment --systemd XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE XDG_DATA_DIRS || true
 fi
 if command -v systemctl >/dev/null 2>&1; then
   systemctl --user start pipewire.socket wireplumber.service >/dev/null 2>&1 || true

@@ -8,6 +8,6 @@ if [ -r "$config_home/hypr/layout" ]; then
 fi
 
 case "$layout" in
-  dwindle|master) hyprctl keyword general:layout "$layout" ;;
+  dwindle|master) hyprctl eval "hl.config({ general = { layout = \"$layout\" } })" ;;
   *) printf 'Layout invalido salvo em %s/hypr/layout: %s\n' "$config_home" "$layout" >&2; exit 2 ;;
 esac

@@ -4,7 +4,7 @@ set -eu
 temp_dir="$(mktemp -d)"
 trap 'rm -rf "$temp_dir"' EXIT
 
-for number in {1..20}; do
+for number in {1..25}; do
   (
     if ping -n -q -c 1 -W 1 "192.168.69.$((100 + number))" >/dev/null 2>&1; then
       printf 'online' > "$temp_dir/$number"
@@ -17,7 +17,7 @@ wait
 
 reachable=()
 tooltip_lines=()
-for number in {1..20}; do
+for number in {1..25}; do
   state="$(cat "$temp_dir/$number")"
   if [ "$state" = online ]; then
     reachable+=("uav$number")

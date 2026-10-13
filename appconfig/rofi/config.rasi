@@ -1,0 +1,6 @@
+configuration {
+    show-icons: false;
+}
+
+@theme "default"
+@import "current-theme.rasi"

@@ -10,7 +10,7 @@ fi
 if [ -x "$nix_profile/nixGLNvidiaBumblebee" ]; then
   choices+=(nvidia-hybrid)
 fi
-choice="$(printf '%s\n' "${choices[@]}" | rofi -dmenu -i -p 'GPU da sessao')" || exit 0
+choice="$(printf '%s\n' "${choices[@]}" | linux-setup-hyprland-app rofi -dmenu -i -p 'GPU da sessao')" || exit 0
 case "$choice" in
   mesa|nvidia|nvidia-hybrid)
     install -d "$config_home/hypr"

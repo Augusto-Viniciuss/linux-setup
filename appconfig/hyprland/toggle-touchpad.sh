@@ -15,11 +15,15 @@ fi
 runtime_dir="${XDG_RUNTIME_DIR:-/tmp}"
 state_file="$runtime_dir/linux-setup-touchpad-disabled-${UID:-$(id -u)}"
 if [ -e "$state_file" ]; then
-  hyprctl keyword "device:$device:enabled" true
+  enabled=true
   rm -f "$state_file"
-  notify-send 'Hyprland' 'Touchpad ativado.'
+  message='Touchpad ativado.'
 else
-  hyprctl keyword "device:$device:enabled" false
+  enabled=false
   : > "$state_file"
-  notify-send 'Hyprland' 'Touchpad desativado.'
+  message='Touchpad desativado.'
 fi
+
+lua_device="$(printf '%s' "$device" | jq -Rr @json)"
+hyprctl eval "hl.device({ name = $lua_device, enabled = $enabled })"
+notify-send 'Hyprland' "$message"

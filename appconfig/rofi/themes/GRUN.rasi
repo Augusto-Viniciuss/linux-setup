@@ -1,0 +1,22 @@
+* {
+    base: #324827;
+    border-color: #25291e;
+    foreground: #c1c1c1;
+    selected: #424939;
+    accent: #cbc480;
+    urgent: #1844ff;
+    background-color: @base;
+    text-color: @foreground;
+}
+window { background-color: @base; border: 1px; border-color: @border-color; padding: 8px; }
+mainbox, listview { background-color: @base; }
+inputbar { background-color: @base; text-color: @foreground; padding: 6px; }
+prompt { text-color: @accent; }
+entry { text-color: @foreground; }
+element { background-color: @base; text-color: @foreground; padding: 5px 8px; }
+element selected.normal { background-color: @selected; text-color: #ffffff; }
+element selected.active { background-color: @selected; text-color: @accent; }
+element selected.urgent { background-color: @selected; text-color: @urgent; }
+element normal.active { text-color: @accent; }
+element normal.urgent { text-color: @urgent; }
+element-text, element-icon { background-color: inherit; text-color: inherit; }

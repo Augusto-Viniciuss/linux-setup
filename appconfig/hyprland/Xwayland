@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -u
+
+# Hyprland is provided by Nix, while Xwayland comes from Ubuntu. Do not let
+# NixGL's newer Mesa/glibc libraries override Ubuntu's libraries for Xwayland.
+unset LD_LIBRARY_PATH __EGL_VENDOR_LIBRARY_FILENAMES LIBGL_DRIVERS_PATH GBM_BACKENDS_PATH
+
+log_file="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}/linux-setup-xwayland.log"
+exec /usr/bin/Xwayland "$@" >>"$log_file" 2>&1

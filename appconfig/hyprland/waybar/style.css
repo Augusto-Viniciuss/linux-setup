@@ -1,36 +1,69 @@
+@import "theme.css";
+
 * {
   border: none;
   border-radius: 0;
-  font-family: "Terminus", "Inconsolata", sans-serif;
-  font-size: 12px;
+  font-family: "Terminus", "FontAwesome", sans-serif;
+  font-size: 13px;
   min-height: 0;
 }
 
 window#waybar {
-  background: #121212;
-  color: #dddddd;
+  background: @bar_background;
+  color: @bar_foreground;
 }
 
-#workspaces button {
+#custom-ws1,
+#custom-ws2,
+#custom-ws3,
+#custom-ws4,
+#custom-ws5,
+#custom-ws6,
+#custom-ws7,
+#custom-ws8,
+#custom-ws9,
+#custom-ws10 {
   padding: 0 8px;
-  color: #eeeeee;
-  background: #333333;
+  color: @inactive_text;
+  background: @inactive_background;
 }
 
-#workspaces button.active {
-  color: #ffffff;
-  background: #005faf;
+#custom-ws1.active,
+#custom-ws2.active,
+#custom-ws3.active,
+#custom-ws4.active,
+#custom-ws5.active,
+#custom-ws6.active,
+#custom-ws7.active,
+#custom-ws8.active,
+#custom-ws9.active,
+#custom-ws10.active {
+  color: @active_text;
+  background: @active_background;
 }
 
-#workspaces button.urgent {
-  color: #ffffff;
-  background: #ff0000;
-}
-
-#window, #custom-uav-status, #language, #mpris, #network, #pulseaudio, #battery, #cpu, #memory, #disk, #clock, #tray {
+#custom-uav-status,
+#custom-keyboard-layout,
+#custom-online-status,
+#network,
+#pulseaudio,
+#battery,
+#disk,
+#cpu,
+#clock,
+#custom-power {
   padding: 0 8px;
 }
 
-#custom-uav-status.offline {
+#custom-uav-status.offline,
+#custom-online-status {
   color: #888888;
+}
+
+#custom-online-status.offline {
+  color: @urgent_background;
+}
+
+#custom-power {
+  color: #ffffff;
 }

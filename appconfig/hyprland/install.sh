@@ -84,7 +84,7 @@ sudo add-apt-repository -y ppa:danielrichter2007/grub-customizer
 sudo apt-get update
 
 apt_packages=(
-  kitty waybar rofi swaylock grim slurp wl-clipboard brightnessctl
+  kitty waybar swaylock swaybg grim slurp wl-clipboard brightnessctl xfce4-notifyd
   pulseaudio-utils pavucontrol network-manager-gnome xwayland
   xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-wlr
   pipewire wireplumber dbus-user-session libnotify-bin
@@ -130,6 +130,7 @@ fi
 nix --extra-experimental-features 'nix-command flakes' profile add github:hyprwm/Hyprland/v0.55.4
 nix --extra-experimental-features 'nix-command flakes' profile add nixpkgs#tmux
 nix --extra-experimental-features 'nix-command flakes' profile add nixpkgs#nodejs_22
+nix --extra-experimental-features 'nix-command flakes' profile add nixpkgs#rofi
 
 tmux_conf="$HOME/.tmux.conf"
 tmux_version="$("$HOME/.nix-profile/bin/tmux" -V | awk '{print $2}')"
@@ -143,6 +144,7 @@ if dpkg --compare-versions "$tmux_version" ge 3.3; then
 fi
 
 install -d "$config_home/hypr" "$config_home/kitty/themes" \
+  "$config_home/waybar/themes" "$config_home/rofi/themes" \
   "$config_home/waybar" "$config_home/ranger" "$config_home/zathura" \
   "$config_home/xdg-desktop-portal" "$config_home/fzf" "$HOME/.local/bin" \
   "$HOME/.local/share/linux-setup-hyprland"
@@ -174,6 +176,7 @@ backup_and_copy "$repo_root/appconfig/hyprland/hyprland.lua" "$config_home/hypr/
 backup_and_copy "$repo_root/appconfig/kitty/kitty.conf" "$config_home/kitty/kitty.conf"
 backup_and_copy "$repo_root/appconfig/hyprland/waybar/config.jsonc" "$config_home/waybar/config.jsonc"
 backup_and_copy "$repo_root/appconfig/hyprland/waybar/style.css" "$config_home/waybar/style.css"
+backup_and_copy "$repo_root/appconfig/rofi/config.rasi" "$config_home/rofi/config.rasi"
 backup_and_copy "$repo_root/appconfig/hyprland/uav-status.sh" "$config_home/waybar/uav-status.sh" 0755
 backup_and_copy "$repo_root/appconfig/ranger/rc.conf_git" "$config_home/ranger/rc.conf"
 backup_and_copy "$repo_root/appconfig/ranger/commands.py" "$config_home/ranger/commands.py"
@@ -183,19 +186,27 @@ backup_and_copy "$repo_root/appconfig/zathura/zathurarc" "$config_home/zathura/z
 
 for theme in DARK LIGHT GRUN; do
   backup_and_copy "$repo_root/appconfig/kitty/themes/$theme.conf" "$config_home/kitty/themes/$theme.conf"
+  backup_and_copy "$repo_root/appconfig/hyprland/waybar/themes/$theme.css" "$config_home/waybar/themes/$theme.css"
+  backup_and_copy "$repo_root/appconfig/rofi/themes/$theme.rasi" "$config_home/rofi/themes/$theme.rasi"
 done
 if [ ! -e "$config_home/kitty/current-theme.conf" ]; then
   install -m 0644 "$config_home/kitty/themes/DARK.conf" "$config_home/kitty/current-theme.conf"
 fi
 
-for helper in apply-layout.sh layout-menu.sh gpu-menu.sh apply-theme.sh theme-menu.sh toggle-touchpad.sh screenshot.sh; do
+for helper in apply-layout.sh layout-menu.sh gpu-menu.sh apply-theme.sh theme-menu.sh toggle-touchpad.sh screenshot.sh wallpaper.sh brightness.sh start-notifyd.sh start-session-ui.sh; do
   backup_and_copy "$repo_root/appconfig/hyprland/$helper" "$config_home/hypr/$helper" 0755
 done
 backup_and_copy "$repo_root/appconfig/hyprland/system-menu.sh" "$config_home/hypr/system-menu.sh" 0755
 backup_and_copy "$repo_root/appconfig/hyprland/start-hyprland.sh" "$HOME/.local/bin/linux-setup-start-hyprland" 0755
+backup_and_copy "$repo_root/appconfig/hyprland/start-app.sh" "$HOME/.local/bin/linux-setup-hyprland-app" 0755
+backup_and_copy "$repo_root/appconfig/hyprland/Xwayland" "$HOME/.local/bin/Xwayland" 0755
 backup_and_copy "$repo_root/appconfig/hyprland/nixGL" "$HOME/.local/share/linux-setup-hyprland/nixGL" 0755
+backup_and_copy "$repo_root/miscellaneous/wallpapers/capybots.jpg" "$HOME/.local/share/linux-setup-hyprland/capybots.jpg"
 backup_and_copy "$repo_root/appconfig/hyprland/linux-setup-clipboard" "$HOME/.local/bin/linux-setup-clipboard" 0755
 backup_and_copy "$repo_root/scripts/ros2_compile_commands.py" "$HOME/.local/bin/linux-setup-ros2-compile-commands" 0755
+backup_and_copy "$repo_root/appconfig/hyprland/online-status.sh" "$config_home/waybar/online-status.sh" 0755
+backup_and_copy "$repo_root/appconfig/hyprland/waybar/workspace-indicator.sh" "$config_home/waybar/workspace-indicator.sh" 0755
+backup_and_copy "$repo_root/appconfig/hyprland/waybar/keyboard-layout.sh" "$config_home/waybar/keyboard-layout.sh" 0755
 backup_and_copy "$repo_root/appconfig/fzf/config/fzf.zsh" "$config_home/fzf/fzf.zsh"
 backup_and_copy "$repo_root/appconfig/fzf/config/fzf.bash" "$config_home/fzf/fzf.bash"
 
@@ -206,6 +217,15 @@ for state in 'gpu:mesa' 'layout:dwindle' 'theme:DARK'; do
     printf '%s\n' "$value" > "$config_home/hypr/$name"
   fi
 done
+
+selected_theme="$(cat "$config_home/hypr/theme")"
+case "$selected_theme" in
+  DARK|LIGHT|GRUN) ;;
+  *) selected_theme=DARK ;;
+esac
+backup_and_copy "$config_home/kitty/themes/$selected_theme.conf" "$config_home/kitty/current-theme.conf"
+backup_and_copy "$config_home/waybar/themes/$selected_theme.css" "$config_home/waybar/theme.css"
+backup_and_copy "$config_home/rofi/themes/$selected_theme.rasi" "$config_home/rofi/current-theme.rasi"
 
 portal_tmp="$(mktemp)"
 cat > "$portal_tmp" <<'EOF'
@@ -285,13 +305,33 @@ if command -v zsh >/dev/null 2>&1; then
   fi
 fi
 
+system_session_launcher=/usr/local/bin/linux-setup-hyprland-session
+system_session_launcher_tmp="$(mktemp)"
+cat > "$system_session_launcher_tmp" <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+
+launcher="$HOME/.local/bin/linux-setup-start-hyprland"
+if [[ ! -x "$launcher" ]]; then
+  printf 'Hyprland launcher is missing for user %s\n' "${USER:-unknown}" >&2
+  exit 127
+fi
+exec "$launcher" "$@"
+EOF
+if [ -e "$system_session_launcher" ]; then
+  sudo cp -a "$system_session_launcher" \
+    "$system_session_launcher.backup.$(date +%Y%m%d-%H%M%S)"
+fi
+sudo install -Dm 0755 "$system_session_launcher_tmp" "$system_session_launcher"
+rm -f "$system_session_launcher_tmp"
+
 session_file="$(mktemp)"
 cat > "$session_file" <<EOF
 [Desktop Entry]
 Name=Hyprland (linux-setup)
 Comment=Hyprland with linux-setup key bindings
-Exec="$HOME/.local/bin/linux-setup-start-hyprland"
-TryExec="$HOME/.local/bin/linux-setup-start-hyprland"
+Exec=$system_session_launcher
+TryExec=$system_session_launcher
 Type=Application
 DesktopNames=Hyprland
 EOF
@@ -301,6 +341,22 @@ if [ -e /usr/share/wayland-sessions/linux-setup-hyprland.desktop ]; then
 fi
 sudo install -Dm 0644 "$session_file" /usr/share/wayland-sessions/linux-setup-hyprland.desktop
 rm -f "$session_file"
+
+# LightDM on Ubuntu may scan only X11 session directories unless this is
+# explicitly configured. Keep its existing X11 sessions and add Wayland.
+if command -v lightdm >/dev/null 2>&1 && [ -d /etc/lightdm ]; then
+  lightdm_session_config=/etc/lightdm/lightdm.conf.d/99-linux-setup-wayland.conf
+  sudo install -d -m 0755 "$(dirname "$lightdm_session_config")"
+  if [ -e "$lightdm_session_config" ]; then
+    sudo cp -a "$lightdm_session_config" \
+      "$lightdm_session_config.backup.$(date +%Y%m%d-%H%M%S)"
+  fi
+  printf '%s\n' \
+    '[LightDM]' \
+    'sessions-directory=/usr/share/lightdm/sessions:/usr/share/xsessions:/usr/share/wayland-sessions' \
+    | sudo tee "$lightdm_session_config" >/dev/null
+  printf 'LightDM configurado para listar sessoes Wayland; reinicie-o ou reinicie o computador para atualizar o seletor.\n'
+fi
 
 flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 flatpak install --user --noninteractive --assumeyes flathub com.obsproject.Studio

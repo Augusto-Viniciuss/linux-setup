@@ -1,0 +1,7 @@
+@define-color bar_background #ffffff;
+@define-color bar_foreground #1d2021;
+@define-color active_background #aaaaaa;
+@define-color active_text #1d2021;
+@define-color inactive_background #dddddd;
+@define-color inactive_text #1d2021;
+@define-color urgent_background #ff0000;

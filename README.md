@@ -8,7 +8,7 @@
 
 ## Perfil novo: Hyprland e Kitty
 
-O perfil para Ubuntu 22.04 e 24.04 conserva Vim, plugins, Python, tmux, Ranger, SSH e ferramentas escolhidas, e troca i3/urxvt por Hyprland/Kitty. O guia lista os aplicativos, as dependencias novas, os atalhos adaptados e os recursos sem equivalente direto: [guia de migracao e instalacao](docs/migracao-hyprland-ubuntu.md).
+O perfil para Ubuntu 22.04 e 24.04 conserva Vim, plugins, Python, tmux, Ranger, SSH e ferramentas escolhidas, e troca i3/urxvt por Hyprland/Kitty. Consulte o [guia de uso do Hyprland e Kitty](wiki/hyprland.md) para entrar na sessao e usar os atalhos, e o [guia de migracao e instalacao](docs/migracao-hyprland-ubuntu.md) para ver aplicativos, dependencias e diferencas em relacao ao ambiente antigo.
 
 O comando `./install.sh` na raiz instala esse perfil novo. Se Nix ainda nao estiver instalado, o script prepara o Nix multiusuario usando o instalador oficial; depois instala as dependencias APT, Flatpak e Nix do perfil. Isso exige `sudo`, acesso a internet e systemd. O instalador nao instala nem configura ROS; Humble (22.04) ou Jazzy (24.04) so e carregado pelo shell se voce o instalar separadamente em `/opt/ros`.
 
@@ -16,9 +16,9 @@ O comando `./install.sh` na raiz instala esse perfil novo. Se Nix ainda nao esti
 
 Este repositorio tambem contem a configuracao antiga baseada em i3 e urxvt. Para executar explicitamente o instalador legado, use `./install.sh --legacy`; ele instala o conjunto antigo, incluindo aplicativos removidos do perfil novo.
 
-# How to? -> [wiki](https://github.com/Klaxalk/linux-setup/wiki)
+# How to? -> [wiki](wiki/Home.md)
 
-Refer to the project's [wiki](https://github.com/Klaxalk/linux-setup/wiki) (work in progress).
+Refer to this repository's [wiki](wiki/Home.md).
 
 # Credits
 
